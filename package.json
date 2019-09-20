@@ -1,0 +1,9 @@
+{
+  "name": "3vwx2k.run",
+  "version": "0.0.0",
+  "private": true,
+  "dependencies": {
+    "lit-element": "2.2.1",
+    "@webcomponents/webcomponentsjs": "2.3.0"
+  }
+}
