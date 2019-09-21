@@ -13,7 +13,13 @@
   "devDependencies": {
     "@open-wc/building-rollup": "^0.9.29",
     "es-dev-server": "^1.18.0",
+    "husky": "^3.0.5",
     "rimraf": "^3.0.0",
     "rollup": "^1.21.4"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "yarn build"
+    }
   }
 }

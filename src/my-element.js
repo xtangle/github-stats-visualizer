@@ -1,9 +1,20 @@
 import { LitElement, html } from 'lit-element';
 
 class MyElement extends LitElement {
+  static get properties() {
+    return {
+      message: { type: String },
+    };
+  }
+
+  constructor() {
+    super();
+    this.message = 'No message set!';
+  }
+
   render() {
     return html`
-      <p>Hello world! From my-element</p>
+      <p>${this.message} From my-element</p>
     `;
   }
 }
