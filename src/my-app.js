@@ -2,7 +2,7 @@ import '@vaadin/vaadin-grid';
 import '@vaadin/vaadin-grid/vaadin-grid-sort-column';
 import { html, LitElement } from 'lit-element';
 
-class MyTable extends LitElement {
+class MyApp extends LitElement {
   static get properties() {
     return {
       data: { type: Array },
@@ -136,7 +136,6 @@ class MyTable extends LitElement {
 
   render() {
     return html`
-      <p>My table.</p>
       <vaadin-grid .items="${this.data}" theme="row-dividers" multiSort="true">
         <vaadin-grid-sort-column path="firstName" header="First name"></vaadin-grid-sort-column>
         <vaadin-grid-sort-column path="lastName" header="Last name"></vaadin-grid-sort-column>
@@ -146,4 +145,4 @@ class MyTable extends LitElement {
   }
 }
 
-customElements.define('my-table', MyTable);
+customElements.define('my-app', MyApp);

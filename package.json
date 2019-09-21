@@ -3,8 +3,8 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "es-dev-server --app-index index.html --node-resolve --watch --open",
-    "start:compatibility": "es-dev-server --compatibility all --app-index index.html --node-resolve --watch --open",
+    "start": "es-dev-server --app-index index.html --node-resolve --open --watch",
+    "start:compatibility": "es-dev-server --compatibility all --app-index index.html --node-resolve --open --watch",
     "build": "rimraf docs && rollup -c rollup.config.js"
   },
   "dependencies": {
