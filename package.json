@@ -4,13 +4,17 @@
   "private": true,
   "scripts": {
     "start": "es-dev-server --app-index index.html --node-resolve --watch --open",
-    "start:compatibility": "es-dev-server --compatibility all --app-index index.html --node-resolve --watch --open"
+    "start:compatibility": "es-dev-server --compatibility all --app-index index.html --node-resolve --watch --open",
+    "build": "rimraf docs && rollup -c rollup.config.js"
   },
   "dependencies": {
     "@webcomponents/webcomponentsjs": "2.3.0",
     "lit-element": "2.2.1"
   },
   "devDependencies": {
-    "es-dev-server": "^1.18.0"
+    "@open-wc/building-rollup": "^0.9.29",
+    "es-dev-server": "^1.18.0",
+    "rimraf": "^3.0.0",
+    "rollup": "^1.21.4"
   }
 }
