@@ -2,8 +2,15 @@
   "name": "3vwx2k.run",
   "version": "0.0.0",
   "private": true,
+  "scripts": {
+    "start": "es-dev-server --app-index index.html --node-resolve --watch --open",
+    "start:compatibility": "es-dev-server --compatibility all --app-index index.html --node-resolve --watch --open"
+  },
   "dependencies": {
-    "lit-element": "2.2.1",
-    "@webcomponents/webcomponentsjs": "2.3.0"
+    "@webcomponents/webcomponentsjs": "2.3.0",
+    "lit-element": "2.2.1"
+  },
+  "devDependencies": {
+    "es-dev-server": "^1.18.0"
   }
 }
