@@ -8,7 +8,8 @@
     "build": "rimraf docs && rollup -c rollup.config.js"
   },
   "dependencies": {
-    "lit-element": "2.2.1"
+    "@vaadin/vaadin-grid": "^5.4.8",
+    "lit-element": "^2.2.1"
   },
   "devDependencies": {
     "@open-wc/building-rollup": "^0.9.29",
