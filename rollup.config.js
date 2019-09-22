@@ -23,10 +23,16 @@ export default {
   ...defaultConfig,
   plugins: [
     copy({
-      targets: globalScripts.map(glob => ({
-        src: glob,
-        dest: `${outputDir}/${path.dirname(glob)}`,
-      })),
+      targets: [
+        ...globalScripts.map(glob => ({
+          src: glob,
+          dest: `${outputDir}/${path.dirname(glob)}`,
+        })),
+        {
+          src: '.nojekyll',
+          dest: `${outputDir}`,
+        },
+      ],
     }),
     ...defaultConfig.plugins,
   ],
