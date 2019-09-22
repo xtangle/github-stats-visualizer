@@ -5,13 +5,23 @@
   "license": "MIT",
   "private": true,
   "scripts": {
-    "start": "es-dev-server --app-index index.html --node-resolve --open --watch",
-    "start:compatibility": "es-dev-server --compatibility all --app-index index.html --node-resolve --open --watch",
+    "start": "es-dev-server --app-index index.html --hostname 0.0.0.0 --node-resolve --watch",
+    "start:compatibility": "es-dev-server --compatibility all --app-index index.html --hostname 0.0.0.0 --node-resolve --watch",
     "build": "rimraf docs && rollup -c rollup.config.js"
   },
   "dependencies": {
+    "@vaadin/vaadin-app-layout": "^2.0.3",
+    "@vaadin/vaadin-button": "^2.2.1",
+    "@vaadin/vaadin-form-layout": "^2.1.6",
     "@vaadin/vaadin-grid": "^5.4.8",
-    "lit-element": "^2.2.1"
+    "@vaadin/vaadin-icons": "^4.3.1",
+    "@vaadin/vaadin-notification": "^1.4.0",
+    "@vaadin/vaadin-progress-bar": "^1.1.2",
+    "@vaadin/vaadin-text-field": "^2.4.11",
+    "date-fns": "^2.2.1",
+    "graphql.js": "^0.6.5",
+    "lit-element": "^2.2.1",
+    "lit-html": "^1.1.2"
   },
   "devDependencies": {
     "@open-wc/building-rollup": "^0.9.29",
