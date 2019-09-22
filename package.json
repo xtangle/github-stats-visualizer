@@ -1,6 +1,8 @@
 {
   "name": "lit-element-example",
   "version": "0.0.0",
+  "description": "Web components using lit-element hosted on Github Pages",
+  "license": "MIT",
   "private": true,
   "scripts": {
     "start": "es-dev-server --app-index index.html --node-resolve --open --watch",
