@@ -193,3 +193,7 @@ public/
 .history
 
 # End of https://www.gitignore.io/api/node,intellij+all,visualstudiocode
+
+### Custom Overrides ###
+
+!docs/node_modules
