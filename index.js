@@ -1,1 +1,1 @@
-import './src/my-app';
+import './src/ghs-app';
