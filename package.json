@@ -1,7 +1,7 @@
 {
-  "name": "lit-element-example",
-  "version": "0.0.0",
-  "description": "Web components using lit-element hosted on Github Pages",
+  "name": "github-stats-visualizer",
+  "version": "0.0.1",
+  "description": "Pull and view GitHub stats in a tabulated view.",
   "license": "MIT",
   "private": true,
   "scripts": {

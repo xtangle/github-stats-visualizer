@@ -91,7 +91,7 @@ class GhsApp extends LitElement {
           type="${this.notificationOpts.type}" duration="${this.notificationOpts.duration}"></ghs-notification>
         <div slot="navbar" class="navbar">
           <vaadin-drawer-toggle class="navbar__drawer-toggle"></vaadin-drawer-toggle>
-          <h3 class="navbar__title">Github Stats</h3>
+          <h3 class="navbar__title">GitHub Stats Visualizer</h3>
         </div>
         <div slot="drawer" class="drawer">
           <h3>Settings</h3>
