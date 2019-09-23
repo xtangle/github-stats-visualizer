@@ -67,7 +67,7 @@ class GhsPrTable extends LitElement {
 
     const endDate = new Date();
     const startDate = startOfDay(subDays(endDate, 14));
-    this.searchQuery = `org:"GoogleChrome" created:${format(startDate, GITHUB_SEARCH_QUERY_TIMESTAMP_FMT)}..${format(endDate, GITHUB_SEARCH_QUERY_TIMESTAMP_FMT)}`;
+    this.searchQuery = `org:"U0R0-MO" created:${format(startDate, GITHUB_SEARCH_QUERY_TIMESTAMP_FMT)}..${format(endDate, GITHUB_SEARCH_QUERY_TIMESTAMP_FMT)}`;
   }
 
   get notification() {
