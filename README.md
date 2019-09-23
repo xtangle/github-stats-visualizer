@@ -8,6 +8,6 @@ Pull and view GitHub stats in a tabulated view.
 - Run `yarn` in package folder to install dependencies
 - Run `yarn start` to start local server for development
 - Run `yarn build` to build to docs folder
-- Push to GitHub to deploy. 
-    - You do not need to `build` before pushing as it's already done in a pre-commit hook.
-    - After pushing, your changes will be visible on GitHub pages.
+- Push to GitHub (on master branch) to deploy. 
+    - Before pushing, building is not required since it's done in a pre-commit hook.
+    - After pushing, changes will be immediately reflected on GitHub pages.

@@ -52,7 +52,7 @@ class GhsPrTable extends LitElement {
         text-align: end;
       }
       vaadin-grid {
-        height: 75vh;
+        height: calc(100vh - 16em);
       }
     `;
   }
