@@ -65,7 +65,7 @@ class GhsApp extends LitElement {
         ? `Your rate limit information:
            <br>• Limit: ${rateLimit.limit}
            <br>• Remaining: ${rateLimit.remaining}
-           <br>• Resets in: ${formatDistanceStrict(parseISO(rateLimit.resetAt), new Date())}`
+           <br>• Resets in: ${formatDistanceStrict(parseISO(rateLimit.resetAt), new Date(), { unit: 'minute' })}`
         : 'Rate limit information unavailable';
       this.notificationOpts = {
         innerHTML: `Connection Success!<br>${rateLimitInfo}`,
