@@ -28,6 +28,7 @@ class GhsPrTable extends LitElement {
       .controls {
         display: flex;
         flex-direction: row;
+            align-items: flex-end;
         padding-bottom: var(--lumo-space-m);
       }
       .controls > *:not(:last-child) {
@@ -37,22 +38,21 @@ class GhsPrTable extends LitElement {
         padding-top: 0;
         flex-grow: 1;
       }
-      .controls__reload {
-        cursor: pointer;
-        align-self: flex-end;
-      }
       .link__icon {
         margin-top: -3px;
         --iron-icon-width: 16px;
         --iron-icon-height: 16px;
         --iron-icon-fill-color: var(--lumo-primary-color);
       }
-      .num-items-indicator {
+      .grid-footer {
         margin-top: var(--lumo-space-xs);
         text-align: end;
       }
       vaadin-grid {
         height: calc(100vh - 16em);
+      }
+      vaadin-button {
+        cursor: pointer;
       }
     `;
   }
@@ -74,6 +74,10 @@ class GhsPrTable extends LitElement {
     return this.shadowRoot.getElementById('ghs-pr-table-notification');
   }
 
+  get grid() {
+    return this.shadowRoot.querySelector('vaadin-grid');
+  }
+
   get gridColumns() {
     return this.shadowRoot.querySelectorAll('vaadin-grid-column,vaadin-grid-sort-column');
   }
@@ -92,10 +96,8 @@ class GhsPrTable extends LitElement {
     });
   }
 
-  firstUpdated(changedProperties) {
-    this.gridColumns[11].renderer = (root, column, rowData) => {
-      root.innerHTML = `<a class="link" href="${rowData.item.link}" target="_blank"><iron-icon class="link__icon" icon="vaadin:external-link"></iron-icon></a>`;
-    }
+  download() {
+    console.log('DOWNLOADING: ', this.data);
   }
 
   consumeResponse(response) {
@@ -128,19 +130,28 @@ class GhsPrTable extends LitElement {
     }
   }
 
+  firstUpdated(changedProperties) {
+    this.gridColumns[11].renderer = (root, column, rowData) => {
+      root.innerHTML = `<a class="link" href="${rowData.item.link}" target="_blank"><iron-icon class="link__icon" icon="vaadin:external-link"></iron-icon></a>`;
+    };
+  }
+
   render() {
     return html`
       <h3>Pull Requests</h3>
       <div class="controls">
         <vaadin-text-field class="controls__search" label="Search Query" value="${this.searchQuery}" 
           @input="${this.searchInputChangeHandler}" @keydown="${this.searchInputEnterHandler}"></vaadin-text-field>
-        <vaadin-button class="controls__reload" @click="${this.reload}" theme="icon" aria-label="Reload" title="Reload">
+        <vaadin-button @click="${this.reload}" theme="icon" aria-label="Reload" title="Reload">
           <iron-icon icon="vaadin:refresh"></iron-icon>
         </vaadin-button>
+        <vaadin-button @click="${this.download}" theme="icon" aria-label="Download table in CSV format" title="Download CSV" ?disabled="${!this.data.length}">
+          <iron-icon icon="vaadin:download-alt"></iron-icon>
+        </vaadin-button> 
       </div>
       <ghs-notification id="ghs-pr-table-notification" type="error" innerHTML="${this.error}"></ghs-notification>
       ${this.loading ? html`<vaadin-progress-bar indeterminate value="0"></vaadin-progress-bar>` : ''}
-      <vaadin-grid .items="${this.data}" theme="row-dividers" column-reordering-allowed multi-sort>
+      <vaadin-grid .items="${this.data}" theme="compact row-stripes row-dividers wrap-cell-content" column-reordering-allowed multi-sort>
         <vaadin-grid-sort-column path="repository" title="repository" header="Repository" flex-grow="3" resizable></vaadin-grid-sort-column>
         <vaadin-grid-sort-column path="title" header="Title" flex-grow="10" resizable></vaadin-grid-sort-column>
         <vaadin-grid-sort-column path="commits" header="Commits" text-align="end" resizable></vaadin-grid-sort-column>
@@ -152,9 +163,16 @@ class GhsPrTable extends LitElement {
         <vaadin-grid-sort-column path="status" header="Status" text-align="end" resizable></vaadin-grid-sort-column>
         <vaadin-grid-sort-column path="merged" header="Merged" text-align="end" resizable></vaadin-grid-sort-column>
         <vaadin-grid-sort-column path="daysOpen" header="Days open" text-align="end" resizable></vaadin-grid-sort-column>
-        <vaadin-grid-column path="link" header="Link" width="4em" flex-grow="0" text-align="end" frozen resizable></vaadin-grid-column>
+        <vaadin-grid-column path="link" header="Link" width="3em" flex-grow="0" text-align="end" frozen></vaadin-grid-column>
       </vaadin-grid>
-      ${this.data.length ? html`<div class="num-items-indicator">Showing ${this.data.length} of ${this.metadata.totalCount} items</div>` : ''}
+      ${this.data.length 
+        ? html`
+            <div class="grid-footer">
+              <span>Showing ${this.data.length} of ${this.metadata.totalCount} items</span>
+              ${(this.metadata.totalCount > this.data.length) ? html`<span>. Try limiting your search results with a more specific query</span>` : ''}
+            </div>
+          `
+        : ''}
     `;
   }
 }

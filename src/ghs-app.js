@@ -34,11 +34,13 @@ class GhsApp extends LitElement {
         padding-top: 0;
       }
       .drawer vaadin-form-layout > vaadin-button {
-        cursor: pointer;
         margin-top: var(--lumo-space-m);
       }
       .content {
         margin: 0 var(--lumo-space-l);
+      }
+      vaadin-button {
+        cursor: pointer;
       }
     `;
   }

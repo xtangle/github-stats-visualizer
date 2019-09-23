@@ -19,6 +19,7 @@
     "@vaadin/vaadin-progress-bar": "^1.1.2",
     "@vaadin/vaadin-text-field": "^2.4.11",
     "date-fns": "^2.2.1",
+    "export-to-csv": "^0.2.1",
     "graphql.js": "^0.6.5",
     "lit-element": "^2.2.1",
     "lit-html": "^1.1.2"
