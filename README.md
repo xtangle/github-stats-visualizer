@@ -1,5 +1,3 @@
-Forked from https://github.com/xtangle/github-stats-visualizer
-
 # GitHub Stats Visualizer
 
 Pull and view GitHub stats in a tabulated view.
