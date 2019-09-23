@@ -7,7 +7,7 @@ import { formatDistanceStrict, parseISO } from 'date-fns';
 import { html, css, LitElement } from 'lit-element';
 import './ghs-pr-table';
 import { GITHUB_GQL_API } from './constants';
-import { fetchRateLimitData } from './gql-client';
+import { fetchRateLimitData } from './client';
 
 class GhsApp extends LitElement {
   static get properties() {
@@ -28,14 +28,17 @@ class GhsApp extends LitElement {
         margin: 0;
       }
       .drawer {
-        margin: 1.5em;
+        margin: var(--lumo-space-l);
       }
-      .drawer__button {
+      .drawer vaadin-form-layout > *:first-child {
+        padding-top: 0;
+      }
+      .drawer vaadin-form-layout > vaadin-button {
         cursor: pointer;
         margin-top: var(--lumo-space-m);
       }
       .content {
-        margin: 0 1.5em;
+        margin: 0 var(--lumo-space-l);
       }
     `;
   }
@@ -55,23 +58,28 @@ class GhsApp extends LitElement {
   }
 
   testConnectionHandler() {
-    fetchRateLimitData(this.api, this.auth)().then((response) => {
+    fetchRateLimitData(this.api, this.auth).then((response) => {
+      console.debug(response);
       const rateLimit = response.rateLimit;
       const rateLimitInfo = rateLimit
-        ? `Your rate limit information:<br>Limit: ${rateLimit.limit}<br>Remaining: ${rateLimit.remaining}<br>Resets in: ${formatDistanceStrict(parseISO(rateLimit.resetAt), new Date())}`
+        ? `Your rate limit information:
+           <br>• Limit: ${rateLimit.limit}
+           <br>• Remaining: ${rateLimit.remaining}
+           <br>• Resets in: ${formatDistanceStrict(parseISO(rateLimit.resetAt), new Date())}`
         : 'Rate limit information unavailable';
       this.notificationOpts = {
         innerHTML: `Connection Success!<br>${rateLimitInfo}`,
         type: 'success',
         duration: 10000,
       };
+      this.notification.open();
     }).catch((error) => {
+      console.error(error);
       this.notificationOpts = {
         innerHTML: error.message ? `Error: ${error.message}` : 'Unknown Error',
         type: 'error',
         duration: 5000,
       };
-    }).finally(() => {
       this.notification.open();
     });
   }
@@ -91,7 +99,7 @@ class GhsApp extends LitElement {
             <vaadin-text-field label="API" value="${this.api}" @input="${e => this.api = e.path[0].value}"></vaadin-text-field>
             <vaadin-text-field label="Username" value="${this.auth.username}" @input="${e => this.auth.username = e.path[0].value}"></vaadin-text-field>
             <vaadin-password-field label="Password" value="${this.auth.password}" @input="${e => this.auth.password = e.path[0].value}"></vaadin-password-field>
-            <vaadin-button class="drawer__button" @click="${this.testConnectionHandler}">Test Connection</vaadin-button>
+            <vaadin-button @click="${this.testConnectionHandler}">Test Connection</vaadin-button>
           </vaadin-form-layout>
         </div>
         <div class="content">

@@ -22,11 +22,12 @@ const defaultConfig = createDefaultConfig({
 export default {
   ...defaultConfig,
   plugins: [
+    ...defaultConfig.plugins,
     copy({
       targets: [
-        ...globalScripts.map(glob => ({
-          src: glob,
-          dest: `${outputDir}/${path.dirname(glob)}`,
+        ...globalScripts.map(file => ({
+          src: file,
+          dest: `${outputDir}/${path.dirname(file)}`,
         })),
         {
           src: '.nojekyll',
@@ -34,6 +35,5 @@ export default {
         },
       ],
     }),
-    ...defaultConfig.plugins,
   ],
 };
