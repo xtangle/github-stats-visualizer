@@ -9,6 +9,7 @@ import { css, html, LitElement } from 'lit-element';
 import { fetchPullRequestData } from './client';
 import './ghs-notification';
 import { GITHUB_SEARCH_QUERY_TIMESTAMP_FMT, PR_STATUSES, YESNO } from './constants';
+import { errorInterpreter } from './utils';
 
 class GhsPrTable extends LitElement {
   static get properties() {
@@ -90,7 +91,7 @@ class GhsPrTable extends LitElement {
       this.updateComplete.then(() => this.grid.recalculateColumnWidths());
     }).catch((error) => {
       console.error(error);
-      this.error = error.message ? `Error: ${error.message}` : 'Unknown Error';
+      this.error = errorInterpreter(error);
       this.notification.open();
     }).finally(() => {
       this.loading = false;
