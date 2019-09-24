@@ -29,7 +29,7 @@ export const exportCsv = async (filename, grid) => {
   const headers = colsInOrder.map(c => c.attributes['header'].value);
   const paths = colsInOrder.map(c => c.attributes['path'].value);
   const csvHeaderContent = headers.join(',');
-  const csvBodyContent = new json2csv.Parser({fields: paths, header: false, eol: '\n'}).parse(sortedItems);
+  const csvBodyContent = new json2csv.Parser({ fields: paths, header: false, eol: '\n' }).parse(sortedItems);
   const csvContent = csvHeaderContent + '\n' + csvBodyContent;
   const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
   const url = URL.createObjectURL(blob);
@@ -40,3 +40,37 @@ export const exportCsv = async (filename, grid) => {
   link.click();
   document.body.removeChild(link);
 };
+
+export const applyColorizedRenderers = (grid, props) => {
+  props.forEach(prop => {
+    const {
+      path,
+      bounds,
+      partitioner,
+      excludes = v => v === null || v === undefined,
+      colors = ['green', 'yellow', 'red'],
+      alpha = 0.5,
+      reversed = false,
+      valueExtractor = (rowData, path) => getPropByPath(rowData.item, path),
+      additionalRenderers = [],
+    } = prop;
+    getColumnByPath(grid, path).renderer = (root, column, rowData) => {
+      const value = valueExtractor(rowData, path);
+      if (!excludes(value)) {
+        let gradientAt = bounds
+          ? Math.min(Math.max((value - bounds[0]) / (bounds[1] - bounds[0]), 0), 1)
+          : (partitioner(value) ? 0 : 1);
+        if (reversed) {
+          gradientAt = 1 - gradientAt;
+        }
+        root.style.backgroundColor = tinygradient(...colors).rgbAt(gradientAt).setAlpha(alpha).toRgbString();
+      }
+      root.innerHTML = value;
+      additionalRenderers.forEach(renderer => renderer(root, column, rowData));
+    };
+  })
+};
+
+export const getColumnByPath = (grid, path) => grid.querySelector(`:scope > *[path="${path}"]`);
+
+export const getPropByPath = (obj, key) => key.split('.').reduce((a, b) => a && a[b], obj);

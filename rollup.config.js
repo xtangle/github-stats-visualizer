@@ -13,6 +13,8 @@ const outputDir = 'docs';
 const globalScripts = [
   'node_modules/graphql.js/graphql.min.js',
   'node_modules/json2csv/dist/json2csv.umd.js',
+  'node_modules/tinycolor2/dist/tinycolor-min.js',
+  'node_modules/tinygradient/browser.js',
 ];
 
 const defaultConfig = createDefaultConfig({

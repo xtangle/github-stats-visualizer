@@ -7,9 +7,49 @@ import '@vaadin/vaadin-progress-bar/vaadin-progress-bar';
 import { differenceInBusinessDays, format, parseISO, startOfDay, subDays } from 'date-fns';
 import { css, html, LitElement } from 'lit-element';
 import { fetchPullRequestData } from './client';
-import './ghs-notification';
 import { FILENAME_TIMESTAMP_FMT, GITHUB_SEARCH_QUERY_TIMESTAMP_FMT, PR_STATUSES, YESNO } from './constants';
-import { exportCsv, interpretErrorResponse } from './utils';
+import './ghs-notification';
+import { applyColorizedRenderers, exportCsv, getColumnByPath, interpretErrorResponse } from './utils';
+
+const colorizerProperties = [
+  {
+    path: 'commits',
+    bounds: [10, 40],
+  },
+  {
+    path: 'files',
+    bounds: [20, 60],
+  },
+  {
+    path: 'additions',
+    bounds: [100, 500],
+  },
+  {
+    path: 'deletions',
+    bounds: [0, 200],
+    colors: ['white', 'green'],
+  },
+  {
+    path: 'participants',
+    partitioner: value => value > 1,
+  },
+  {
+    path: 'reviews',
+    partitioner: value => value > 1,
+  },
+  {
+    path: 'daysOpen',
+    bounds: [0, 3],
+  },
+  {
+    path: 'merged',
+    partitioner: value => value === YESNO.YES,
+  },
+  {
+    path: 'status',
+    partitioner: value => value === PR_STATUSES.CLOSED,
+  },
+];
 
 class GhsPrTable extends LitElement {
   static get properties() {
@@ -80,10 +120,6 @@ class GhsPrTable extends LitElement {
     return this.shadowRoot.querySelector('vaadin-grid');
   }
 
-  get gridColumns() {
-    return this.shadowRoot.querySelectorAll('vaadin-grid-column,vaadin-grid-sort-column');
-  }
-
   async reload() {
     this.loading = true;
     return fetchPullRequestData(this.api, this.auth, this.searchQuery).then((response) => {
@@ -134,7 +170,8 @@ class GhsPrTable extends LitElement {
   }
 
   firstUpdated(changedProperties) {
-    this.gridColumns[11].renderer = (root, column, rowData) => {
+    applyColorizedRenderers(this.grid, colorizerProperties);
+    getColumnByPath(this.grid, 'link').renderer = (root, column, rowData) => {
       root.innerHTML = `<a class="link" href="${rowData.item.link}" target="_blank"><iron-icon class="link__icon" icon="vaadin:external-link"></iron-icon></a>`;
     };
   }
@@ -155,7 +192,7 @@ class GhsPrTable extends LitElement {
       <ghs-notification id="ghs-pr-table-notification" type="error" innerHTML="${this.error}"></ghs-notification>
       ${this.loading ? html`<vaadin-progress-bar indeterminate value="0"></vaadin-progress-bar>` : ''}
       <vaadin-grid .items="${this.data}" theme="compact row-dividers column-borders" column-reordering-allowed multi-sort>
-        <vaadin-grid-sort-column path="repository" title="repository" header="Repository" auto-width resizable></vaadin-grid-sort-column>
+        <vaadin-grid-sort-column path="repository" header="Repository" auto-width resizable></vaadin-grid-sort-column>
         <vaadin-grid-sort-column path="title" header="Title" auto-width resizable></vaadin-grid-sort-column>
         <vaadin-grid-sort-column path="commits" header="Commits" text-align="end" width="7em" flex-grow="0" resizable></vaadin-grid-sort-column>
         <vaadin-grid-sort-column path="files" header="Files" text-align="end" width="7em" flex-grow="0" resizable></vaadin-grid-sort-column>
@@ -168,14 +205,14 @@ class GhsPrTable extends LitElement {
         <vaadin-grid-sort-column path="status" header="Status" text-align="center" width="7em" flex-grow="0" resizable></vaadin-grid-sort-column>
         <vaadin-grid-column path="link" header="Link" text-align="center" width="4em" flex-grow="0" frozen></vaadin-grid-column>
       </vaadin-grid>
-      ${this.data.length 
-        ? html`
+      ${this.data.length
+      ? html`
             <div class="grid-footer">
               <span>Showing ${this.data.length} of ${this.metadata.totalCount} items.</span>
               ${(this.metadata.totalCount > this.data.length) ? html`<span>Try narrowing down your search results with a more specific query.</span>` : ''}
             </div>
           `
-        : ''}
+      : ''}
     `;
   }
 }
