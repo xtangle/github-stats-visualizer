@@ -28,7 +28,7 @@ class GhsPrTable extends LitElement {
       .controls {
         display: flex;
         flex-direction: row;
-            align-items: flex-end;
+        align-items: flex-end;
         padding-bottom: var(--lumo-space-m);
       }
       .controls > *:not(:last-child) {
@@ -45,11 +45,11 @@ class GhsPrTable extends LitElement {
         --iron-icon-fill-color: var(--lumo-primary-color);
       }
       .grid-footer {
-        margin-top: var(--lumo-space-xs);
+        margin-top: var(--lumo-space-s);
         text-align: end;
       }
       vaadin-grid {
-        height: calc(100vh - 16em);
+        height: calc(100vh - 17em);
       }
       vaadin-button {
         cursor: pointer;
@@ -87,6 +87,7 @@ class GhsPrTable extends LitElement {
     fetchPullRequestData(this.api, this.auth, this.searchQuery).then((response) => {
       console.debug(response);
       this.consumeResponse(response);
+      this.updateComplete.then(() => this.grid.recalculateColumnWidths());
     }).catch((error) => {
       console.error(error);
       this.error = error.message ? `Error: ${error.message}` : 'Unknown Error';
@@ -110,9 +111,9 @@ class GhsPrTable extends LitElement {
       deletions: pr.files.nodes.reduce((acc, v) => acc + v.deletions, 0),
       participants: pr.participants.totalCount,
       reviews: pr.reviews.totalCount,
-      status: pr.closed ? PR_STATUSES.CLOSED : PR_STATUSES.OPEN,
-      merged: pr.merged ? YESNO.YES : YESNO.NO,
       daysOpen: differenceInBusinessDays(pr.closed ? parseISO(pr.closedAt) : new Date(), parseISO(pr.createdAt)),
+      merged: pr.merged ? YESNO.YES : YESNO.NO,
+      status: pr.closed ? PR_STATUSES.CLOSED : PR_STATUSES.OPEN,
       link: pr.url,
     }));
     this.metadata = {
@@ -151,25 +152,25 @@ class GhsPrTable extends LitElement {
       </div>
       <ghs-notification id="ghs-pr-table-notification" type="error" innerHTML="${this.error}"></ghs-notification>
       ${this.loading ? html`<vaadin-progress-bar indeterminate value="0"></vaadin-progress-bar>` : ''}
-      <vaadin-grid .items="${this.data}" theme="compact row-stripes row-dividers wrap-cell-content" column-reordering-allowed multi-sort>
-        <vaadin-grid-sort-column path="repository" title="repository" header="Repository" flex-grow="3" resizable></vaadin-grid-sort-column>
-        <vaadin-grid-sort-column path="title" header="Title" flex-grow="10" resizable></vaadin-grid-sort-column>
-        <vaadin-grid-sort-column path="commits" header="Commits" text-align="end" resizable></vaadin-grid-sort-column>
-        <vaadin-grid-sort-column path="files" header="Files" text-align="end" resizable></vaadin-grid-sort-column>
-        <vaadin-grid-sort-column path="additions" header="Additions" text-align="end" resizable></vaadin-grid-sort-column>
-        <vaadin-grid-sort-column path="deletions" header="Deletions" text-align="end" resizable></vaadin-grid-sort-column>
-        <vaadin-grid-sort-column path="participants" header="Participants" text-align="end" resizable></vaadin-grid-sort-column>
-        <vaadin-grid-sort-column path="reviews" header="Reviews" text-align="end" resizable></vaadin-grid-sort-column>
-        <vaadin-grid-sort-column path="status" header="Status" text-align="end" resizable></vaadin-grid-sort-column>
-        <vaadin-grid-sort-column path="merged" header="Merged" text-align="end" resizable></vaadin-grid-sort-column>
-        <vaadin-grid-sort-column path="daysOpen" header="Days open" text-align="end" resizable></vaadin-grid-sort-column>
-        <vaadin-grid-column path="link" header="Link" width="3em" flex-grow="0" text-align="end" frozen></vaadin-grid-column>
+      <vaadin-grid .items="${this.data}" theme="compact row-dividers column-borders wrap-cell-content" column-reordering-allowed multi-sort>
+        <vaadin-grid-sort-column path="repository" title="repository" header="Repository" auto-width resizable></vaadin-grid-sort-column>
+        <vaadin-grid-sort-column path="title" header="Title" auto-width resizable></vaadin-grid-sort-column>
+        <vaadin-grid-sort-column path="commits" header="Commits" text-align="end" width="7em" flex-grow="0" resizable></vaadin-grid-sort-column>
+        <vaadin-grid-sort-column path="files" header="Files" text-align="end" width="7em" flex-grow="0" resizable></vaadin-grid-sort-column>
+        <vaadin-grid-sort-column path="additions" header="Additions" text-align="end" width="7em" flex-grow="0" resizable></vaadin-grid-sort-column>
+        <vaadin-grid-sort-column path="deletions" header="Deletions" text-align="end" width="7em" flex-grow="0" resizable></vaadin-grid-sort-column>
+        <vaadin-grid-sort-column path="participants" header="Participants" text-align="end" width="7em" flex-grow="0" resizable></vaadin-grid-sort-column>
+        <vaadin-grid-sort-column path="reviews" header="Reviews" text-align="end" width="7em" flex-grow="0" resizable></vaadin-grid-sort-column>
+        <vaadin-grid-sort-column path="daysOpen" header="Days open" text-align="end" width="7em" flex-grow="0" resizable></vaadin-grid-sort-column>
+        <vaadin-grid-sort-column path="merged" header="Merged" text-align="center" width="7em" flex-grow="0" resizable></vaadin-grid-sort-column>
+        <vaadin-grid-sort-column path="status" header="Status" text-align="center" width="7em" flex-grow="0" resizable></vaadin-grid-sort-column>
+        <vaadin-grid-column path="link" header="Link" text-align="center" width="4em" flex-grow="0" frozen></vaadin-grid-column>
       </vaadin-grid>
       ${this.data.length 
         ? html`
             <div class="grid-footer">
-              <span>Showing ${this.data.length} of ${this.metadata.totalCount} items</span>
-              ${(this.metadata.totalCount > this.data.length) ? html`<span>. Try limiting your search results with a more specific query</span>` : ''}
+              <span>Showing ${this.data.length} of ${this.metadata.totalCount} items.</span>
+              ${(this.metadata.totalCount > this.data.length) ? html`<span>Try narrowing down your search results with a more specific query.</span>` : ''}
             </div>
           `
         : ''}
