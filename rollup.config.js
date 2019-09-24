@@ -12,6 +12,7 @@ const outputDir = 'docs';
 // relative path has to be preserved
 const globalScripts = [
   'node_modules/graphql.js/graphql.min.js',
+  'node_modules/json2csv/dist/json2csv.umd.js',
 ];
 
 const defaultConfig = createDefaultConfig({

@@ -8,8 +8,8 @@ import { differenceInBusinessDays, format, parseISO, startOfDay, subDays } from 
 import { css, html, LitElement } from 'lit-element';
 import { fetchPullRequestData } from './client';
 import './ghs-notification';
-import { GITHUB_SEARCH_QUERY_TIMESTAMP_FMT, PR_STATUSES, YESNO } from './constants';
-import { errorInterpreter } from './utils';
+import { FILENAME_TIMESTAMP_FMT, GITHUB_SEARCH_QUERY_TIMESTAMP_FMT, PR_STATUSES, YESNO } from './constants';
+import { exportCsv, interpretErrorResponse } from './utils';
 
 class GhsPrTable extends LitElement {
   static get properties() {
@@ -40,7 +40,7 @@ class GhsPrTable extends LitElement {
         flex-grow: 1;
       }
       .link__icon {
-        margin-top: -3px;
+        margin-top: -4px;
         --iron-icon-width: 16px;
         --iron-icon-height: 16px;
         --iron-icon-fill-color: var(--lumo-primary-color);
@@ -51,6 +51,7 @@ class GhsPrTable extends LitElement {
       }
       vaadin-grid {
         height: calc(100vh - 17em);
+        min-height: 25em;
       }
       vaadin-button {
         cursor: pointer;
@@ -83,23 +84,23 @@ class GhsPrTable extends LitElement {
     return this.shadowRoot.querySelectorAll('vaadin-grid-column,vaadin-grid-sort-column');
   }
 
-  reload() {
+  async reload() {
     this.loading = true;
-    fetchPullRequestData(this.api, this.auth, this.searchQuery).then((response) => {
+    return fetchPullRequestData(this.api, this.auth, this.searchQuery).then((response) => {
       console.debug(response);
       this.consumeResponse(response);
       this.updateComplete.then(() => this.grid.recalculateColumnWidths());
     }).catch((error) => {
       console.error(error);
-      this.error = errorInterpreter(error);
+      this.error = interpretErrorResponse(error);
       this.notification.open();
     }).finally(() => {
       this.loading = false;
     });
   }
 
-  download() {
-    console.log('DOWNLOADING: ', this.data);
+  async download() {
+    return exportCsv(`pull_requests_${format(new Date(), FILENAME_TIMESTAMP_FMT)}.csv`, this.grid);
   }
 
   consumeResponse(response) {
@@ -153,7 +154,7 @@ class GhsPrTable extends LitElement {
       </div>
       <ghs-notification id="ghs-pr-table-notification" type="error" innerHTML="${this.error}"></ghs-notification>
       ${this.loading ? html`<vaadin-progress-bar indeterminate value="0"></vaadin-progress-bar>` : ''}
-      <vaadin-grid .items="${this.data}" theme="compact row-dividers column-borders wrap-cell-content" column-reordering-allowed multi-sort>
+      <vaadin-grid .items="${this.data}" theme="compact row-dividers column-borders" column-reordering-allowed multi-sort>
         <vaadin-grid-sort-column path="repository" title="repository" header="Repository" auto-width resizable></vaadin-grid-sort-column>
         <vaadin-grid-sort-column path="title" header="Title" auto-width resizable></vaadin-grid-sort-column>
         <vaadin-grid-sort-column path="commits" header="Commits" text-align="end" width="7em" flex-grow="0" resizable></vaadin-grid-sort-column>

@@ -8,7 +8,7 @@ import { html, css, LitElement } from 'lit-element';
 import './ghs-pr-table';
 import { GITHUB_GQL_API } from './constants';
 import { fetchRateLimitData } from './client';
-import { errorInterpreter } from './utils';
+import { interpretErrorResponse } from './utils';
 
 class GhsApp extends LitElement {
   static get properties() {
@@ -79,7 +79,7 @@ class GhsApp extends LitElement {
     }).catch((error) => {
       console.error(error);
       this.notificationOpts = {
-        innerHTML: errorInterpreter(error),
+        innerHTML: interpretErrorResponse(error),
         type: 'error',
         duration: 5000,
       };
