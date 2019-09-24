@@ -29,6 +29,9 @@ class GhsNotification extends LitElement {
   open() {
     this.requestUpdate().then(() => {
       this.notification.renderer = (root, owner) => {
+        if (root.firstElementChild) {
+          return;
+        }
         root.innerHTML = this.innerHTML;
         root.addEventListener('click', () => owner.close());
       };

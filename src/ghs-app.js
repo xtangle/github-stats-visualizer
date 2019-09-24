@@ -87,6 +87,12 @@ class GhsApp extends LitElement {
     });
   }
 
+  testConnectionKeyHandler(e) {
+    if (e.key === 'Enter') {
+      this.testConnectionHandler();
+    }
+  }
+
   render() {
     return html`
       <vaadin-app-layout>
@@ -98,7 +104,7 @@ class GhsApp extends LitElement {
         </div>
         <div slot="drawer" class="drawer">
           <h3>Settings</h3>
-          <vaadin-form-layout>
+          <vaadin-form-layout @keydown="${this.testConnectionKeyHandler}">
             <vaadin-text-field label="API" value="${this.api}" @input="${e => this.api = e.path[0].value}"></vaadin-text-field>
             <vaadin-text-field label="Username" value="${this.auth.username}" @input="${e => this.auth.username = e.path[0].value}"></vaadin-text-field>
             <vaadin-password-field label="Password" value="${this.auth.password}" @input="${e => this.auth.password = e.path[0].value}"></vaadin-password-field>

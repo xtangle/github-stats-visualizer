@@ -26,7 +26,7 @@ const colorizerProperties = [
   },
   {
     path: 'deletions',
-    bounds: [0, 200],
+    bounds: [0, 100],
     colors: ['white', 'green'],
   },
   {
@@ -163,9 +163,9 @@ class GhsPrTable extends LitElement {
     this.searchQuery = e.path[0].value;
   }
 
-  searchInputEnterHandler(e) {
+  async searchInputKeyHandler(e) {
     if (e.key === 'Enter') {
-      this.reload();
+      await this.reload();
     }
   }
 
@@ -181,7 +181,7 @@ class GhsPrTable extends LitElement {
       <h3>Pull Requests</h3>
       <div class="controls">
         <vaadin-text-field class="controls__search" label="Search Query" value="${this.searchQuery}" 
-          @input="${this.searchInputChangeHandler}" @keydown="${this.searchInputEnterHandler}"></vaadin-text-field>
+          @input="${this.searchInputChangeHandler}" @keydown="${this.searchInputKeyHandler}"></vaadin-text-field>
         <vaadin-button @click="${this.reload}" theme="icon" aria-label="Reload" title="Reload">
           <iron-icon icon="vaadin:refresh"></iron-icon>
         </vaadin-button>
