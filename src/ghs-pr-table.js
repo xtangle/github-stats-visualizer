@@ -35,7 +35,7 @@ const colorizerProperties = [
   },
   {
     path: 'reviews',
-    partitioner: value => value > 1,
+    partitioner: value => value > 0,
   },
   {
     path: 'daysOpen',
@@ -92,6 +92,9 @@ class GhsPrTable extends LitElement {
       vaadin-grid {
         height: calc(100vh - 17em);
         min-height: 25em;
+      }
+      vaadin-grid-cell-content {
+        height: 100%;
       }
       vaadin-button {
         cursor: pointer;
@@ -191,19 +194,19 @@ class GhsPrTable extends LitElement {
       </div>
       <ghs-notification id="ghs-pr-table-notification" type="error" innerHTML="${this.error}"></ghs-notification>
       ${this.loading ? html`<vaadin-progress-bar indeterminate value="0"></vaadin-progress-bar>` : ''}
-      <vaadin-grid .items="${this.data}" theme="compact row-dividers column-borders" column-reordering-allowed multi-sort>
+      <vaadin-grid .items="${this.data}" theme="compact row-dividers column-borders wrap-cell-content" column-reordering-allowed multi-sort>
         <vaadin-grid-sort-column path="repository" header="Repository" auto-width resizable></vaadin-grid-sort-column>
         <vaadin-grid-sort-column path="title" header="Title" auto-width resizable></vaadin-grid-sort-column>
-        <vaadin-grid-sort-column path="commits" header="Commits" text-align="end" width="7em" flex-grow="0" resizable></vaadin-grid-sort-column>
-        <vaadin-grid-sort-column path="files" header="Files" text-align="end" width="7em" flex-grow="0" resizable></vaadin-grid-sort-column>
-        <vaadin-grid-sort-column path="additions" header="Additions" text-align="end" width="7em" flex-grow="0" resizable></vaadin-grid-sort-column>
-        <vaadin-grid-sort-column path="deletions" header="Deletions" text-align="end" width="7em" flex-grow="0" resizable></vaadin-grid-sort-column>
+        <vaadin-grid-sort-column path="commits" header="Commits" text-align="end" width="6em" flex-grow="0" resizable></vaadin-grid-sort-column>
+        <vaadin-grid-sort-column path="files" header="Files" text-align="end" width="4em" flex-grow="0" resizable></vaadin-grid-sort-column>
+        <vaadin-grid-sort-column path="additions" header="Additions" text-align="end" width="6em" flex-grow="0" resizable></vaadin-grid-sort-column>
+        <vaadin-grid-sort-column path="deletions" header="Deletions" text-align="end" width="6em" flex-grow="0" resizable></vaadin-grid-sort-column>
         <vaadin-grid-sort-column path="participants" header="Participants" text-align="end" width="7em" flex-grow="0" resizable></vaadin-grid-sort-column>
-        <vaadin-grid-sort-column path="reviews" header="Reviews" text-align="end" width="7em" flex-grow="0" resizable></vaadin-grid-sort-column>
-        <vaadin-grid-sort-column path="daysOpen" header="Days open" text-align="end" width="7em" flex-grow="0" resizable></vaadin-grid-sort-column>
-        <vaadin-grid-sort-column path="merged" header="Merged" text-align="center" width="7em" flex-grow="0" resizable></vaadin-grid-sort-column>
-        <vaadin-grid-sort-column path="status" header="Status" text-align="center" width="7em" flex-grow="0" resizable></vaadin-grid-sort-column>
-        <vaadin-grid-column path="link" header="Link" text-align="center" width="4em" flex-grow="0" frozen></vaadin-grid-column>
+        <vaadin-grid-sort-column path="reviews" header="Reviews" text-align="end" width="5.5em" flex-grow="0" resizable></vaadin-grid-sort-column>
+        <vaadin-grid-sort-column path="daysOpen" header="Days open" text-align="end" width="6.5em" flex-grow="0" resizable></vaadin-grid-sort-column>
+        <vaadin-grid-sort-column path="merged" header="Merged" text-align="center" width="5.5em" flex-grow="0" resizable></vaadin-grid-sort-column>
+        <vaadin-grid-sort-column path="status" header="Status" text-align="center" width="5.5em" flex-grow="0" resizable></vaadin-grid-sort-column>
+        <vaadin-grid-column path="link" header="Link" text-align="center" width="3.5em" flex-grow="0" frozen></vaadin-grid-column>
       </vaadin-grid>
       ${this.data.length
       ? html`
