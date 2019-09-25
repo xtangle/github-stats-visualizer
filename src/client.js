@@ -28,6 +28,9 @@ export const fetchPullRequestData = (api, auth, searchQuery) => createClient(api
           }
           url
           title
+          author {
+            login
+          }
           closed
           merged
           createdAt
